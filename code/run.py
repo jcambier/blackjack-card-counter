@@ -49,10 +49,11 @@ def train(model, datasets, checkpoint_path, logs_path, init_epoch):
             update_freq='batch',
             profile_batch=0),
         #ImageLabelingLogger(logs_path, datasets),
-        CustomModelSaver(checkpoint_path, ARGS.task, hp.max_num_weights)
+        CustomModelSaver(checkpoint_path, hp.max_num_weights)
     ]
 
     # Begin training
+    print("training...\n")
     model.fit(
         x=datasets.train_data,
         validation_data=datasets.test_data,
@@ -126,6 +127,9 @@ def main():
     if ARGS.test:
         test(model, datasets.test_data)
     else:
+        print("test\n")
         train(model, datasets, checkpoint_path, logs_path, init_epoch)
 
 ARGS = parse_args()
+
+main()
