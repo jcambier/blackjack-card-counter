@@ -6,7 +6,7 @@ from datetime import datetime
 import tensorflow as tf
 
 import parameters as hp
-from model import YourModel, VGGModel
+from model import VGGModel
 from preprocess import Datasets
 from skimage.transform import resize
 from tensorboard_utils import \
@@ -30,7 +30,7 @@ def parse_args():
         help='Flag for whether to train the network on our dataset.')
     parser.add_argument(
         '--test',
-        default='../weights/example.h5',
+        default=False,
         help='Flag for whether to test the network using a set of weights.')
     parser.add_argument(
         '--blackjack',
@@ -44,11 +44,11 @@ def train(model, datasets, checkpoint_path, logs_path, init_epoch):
 
     # Keras callbacks for training
     callback_list = [
-        tf.keras.callbacks.TensorBoard(
+       tf.keras.callbacks.TensorBoard(
             log_dir=logs_path,
             update_freq='batch',
             profile_batch=0),
-        ImageLabelingLogger(logs_path, datasets),
+        #ImageLabelingLogger(logs_path, datasets),
         CustomModelSaver(checkpoint_path, ARGS.task, hp.max_num_weights)
     ]
 
@@ -81,50 +81,40 @@ def main():
     # If paths provided by program arguments are accurate, then this will
     # ensure they are used. If not, these directories/files will be
     # set relative to the directory of run.py
-    if os.path.exists(ARGS.data):
-        ARGS.data = os.path.abspath(ARGS.data)
-    if os.path.exists(ARGS.load_vgg):
-        ARGS.load_vgg = os.path.abspath(ARGS.load_vgg)
+    #if os.path.exists(ARGS.data):
+        #ARGS.data = os.path.abspath(ARGS.data)
+    #if os.path.exists(ARGS.load_vgg):
+        #ARGS.load_vgg = os.path.abspath(ARGS.load_vgg)
 
     # Run script from location of run.py
     os.chdir(sys.path[0])
 
-    datasets = Datasets(ARGS.data, ARGS.task)
+    datasets = Datasets('../data/')
 
-    if ARGS.task == '1':
-        model = YourModel()
-        model(tf.keras.Input(shape=(hp.img_size, hp.img_size, 3)))
-        checkpoint_path = "checkpoints" + os.sep + \
-            "your_model" + os.sep + timestamp + os.sep
-        logs_path = "logs" + os.sep + "your_model" + \
-            os.sep + timestamp + os.sep
-
-        # Print summary of model
-        model.summary()
-    else:
+    if ARGS.train:
         model = VGGModel()
-        checkpoint_path = "checkpoints" + os.sep + \
-            "vgg_model" + os.sep + timestamp + os.sep
+        checkpoint_path = "weights" + os.sep + \
+            "training" + os.sep + timestamp + os.sep
         logs_path = "logs" + os.sep + "vgg_model" + \
             os.sep + timestamp + os.sep
         model(tf.keras.Input(shape=(224, 224, 3)))
 
         # Print summaries for both parts of the model
         model.vgg16.summary()
-        model.head.summary()
+        #model.head.summary()
 
         # Load base of VGG model
-        model.vgg16.load_weights(ARGS.load_vgg, by_name=True)
+        #model.vgg16.load_weights(ARGS.load_vgg, by_name=True)
 
     # Load checkpoints
-    if ARGS.load_checkpoint is not None:
-        if ARGS.task == '1':
-            model.load_weights(ARGS.load_checkpoint, by_name=False)
-        else:
-            model.head.load_weights(ARGS.load_checkpoint, by_name=False)
+    #if ARGS.load_checkpoint is not None:
+     #   if ARGS.task == '1':
+      #      model.load_weights(ARGS.load_checkpoint, by_name=False)
+       # else:
+        #    model.head.load_weights(ARGS.load_checkpoint, by_name=False)
 
     # Make checkpoint directory if needed
-    if not ARGS.evaluate and not os.path.exists(checkpoint_path):
+    if not os.path.exists(checkpoint_path):
         os.makedirs(checkpoint_path)
 
     # Compile model graph
@@ -133,13 +123,8 @@ def main():
         loss=model.loss_fn,
         metrics=["sparse_categorical_accuracy"])
 
-    if ARGS.evaluate:
+    if ARGS.test:
         test(model, datasets.test_data)
-
-        # TODO: change the image path to be the image of your choice by changing
-        # the lime-image flag when calling run.py to investigate
-        # i.e. python run.py --evaluate --lime-image test/Bedroom/image_003.jpg
-        path = ARGS.data + os.sep + ARGS.lime_image
     else:
         train(model, datasets, checkpoint_path, logs_path, init_epoch)
 

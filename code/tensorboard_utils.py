@@ -112,11 +112,10 @@ class ImageLabelingLogger(tf.keras.callbacks.Callback):
 class CustomModelSaver(tf.keras.callbacks.Callback):
     """ Custom Keras callback for saving weights of networks. """
 
-    def __init__(self, checkpoint_dir, task, max_num_weights=5):
+    def __init__(self, checkpoint_dir, max_num_weights=5):
         super(CustomModelSaver, self).__init__()
 
         self.checkpoint_dir = checkpoint_dir
-        self.task = task
         self.max_num_weights = max_num_weights
 
     def on_epoch_end(self, epoch, logs=None):
@@ -133,13 +132,9 @@ class CustomModelSaver(tf.keras.callbacks.Callback):
             save_name = "weights.e{0:03d}-acc{1:.4f}.h5".format(
                 epoch, cur_acc)
 
-            if self.task == '1':
-                self.model.save_weights(
-                    self.checkpoint_dir + os.sep + "your." + save_name)
-            else:
-                # Only save weights of classification head of VGGModel
-                self.model.head.save_weights(
-                    self.checkpoint_dir + os.sep + "vgg." + save_name)
+            # Only save weights of classification head of VGGModel
+            self.model.save_weights(
+                self.checkpoint_dir + os.sep + "vgg." + save_name)
 
             # Ensure max_num_weights is not exceeded by removing
             # minimum weight
