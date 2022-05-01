@@ -1,0 +1,38 @@
+{
+    "os": "Linux-5.10.0-13-amd64-x86_64-with-glibc2.31",
+    "python": "3.9.2",
+    "heartbeatAt": "2022-04-29T19:39:25.927010",
+    "startedAt": "2022-04-29T19:39:23.878429",
+    "docker": null,
+    "gpu": "GeForce GT 1030",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "cuda": null,
+    "args": [
+        "--img",
+        "416",
+        "--batch",
+        "16",
+        "--workers",
+        "2",
+        "--epochs",
+        "120",
+        "--data",
+        "../cards/kaggle_data.yaml",
+        "--weights",
+        "yolov5s.pt",
+        "--cache"
+    ],
+    "state": "running",
+    "program": "/ifs/CS/replicated/home/jcambier/blackjack-card-counter/yolov5/train.py",
+    "codePath": "train.py",
+    "git": {
+        "remote": "https://github.com/ultralytics/yolov5.git",
+        "commit": "1a3ecb8b386115fd22129eaf0760157b161efac7"
+    },
+    "email": null,
+    "root": "/ifs/CS/replicated/home/jcambier/blackjack-card-counter/yolov5",
+    "host": "cslab3h",
+    "username": "jcambier",
+    "executable": "/bin/python3"
+}

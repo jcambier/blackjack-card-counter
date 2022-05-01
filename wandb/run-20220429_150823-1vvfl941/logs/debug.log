@@ -1,0 +1,125 @@
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_setup.py:_flush():75] Loading settings from /home/jcambier/.config/wandb/settings
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_setup.py:_flush():75] Loading settings from /ifs/CS/replicated/home/jcambier/blackjack-card-counter/yolov5/wandb/settings
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'train.py', 'program': '/ifs/CS/replicated/home/jcambier/blackjack-card-counter/yolov5/train.py'}
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_setup.py:_flush():75] Applying login settings: {'login_timeout': 30}
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_setup.py:_flush():75] Applying login settings: {'api_key': '***REDACTED***'}
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_init.py:_log_setup():437] Logging user logs to /ifs/CS/replicated/home/jcambier/blackjack-card-counter/yolov5/wandb/run-20220429_150823-1vvfl941/logs/debug.log
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_init.py:_log_setup():438] Logging internal logs to /ifs/CS/replicated/home/jcambier/blackjack-card-counter/yolov5/wandb/run-20220429_150823-1vvfl941/logs/debug-internal.log
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_init.py:init():471] calling init triggers
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_init.py:init():474] wandb.init called with sweep_config: {}
+config: {'weights': 'yolov5s.pt', 'cfg': '', 'data': '../cards/kaggle_data.yaml', 'hyp': {'lr0': 0.01, 'lrf': 0.01, 'momentum': 0.937, 'weight_decay': 0.0005, 'warmup_epochs': 3.0, 'warmup_momentum': 0.8, 'warmup_bias_lr': 0.1, 'box': 0.05, 'cls': 0.5, 'cls_pw': 1.0, 'obj': 1.0, 'obj_pw': 1.0, 'iou_t': 0.2, 'anchor_t': 4.0, 'fl_gamma': 0.0, 'hsv_h': 0.015, 'hsv_s': 0.7, 'hsv_v': 0.4, 'degrees': 0.0, 'translate': 0.1, 'scale': 0.5, 'shear': 0.0, 'perspective': 0.0, 'flipud': 0.0, 'fliplr': 0.5, 'mosaic': 1.0, 'mixup': 0.0, 'copy_paste': 0.0}, 'epochs': 120, 'batch_size': 16, 'imgsz': 416, 'rect': False, 'resume': False, 'nosave': False, 'noval': False, 'noautoanchor': False, 'noplots': False, 'evolve': None, 'bucket': '', 'cache': 'ram', 'image_weights': False, 'device': '', 'multi_scale': False, 'single_cls': False, 'optimizer': 'SGD', 'sync_bn': False, 'workers': 2, 'project': 'runs/train', 'name': 'exp', 'exist_ok': False, 'quad': False, 'cos_lr': False, 'label_smoothing': 0.0, 'patience': 100, 'freeze': [0], 'save_period': -1, 'local_rank': -1, 'entity': None, 'upload_dataset': False, 'bbox_interval': -1, 'artifact_alias': 'latest', 'save_dir': 'runs/train/exp4'}
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [wandb_init.py:init():524] starting backend
+2022-04-29 15:08:23,884 INFO    MainThread:282624 [backend.py:_multiprocessing_setup():97] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2022-04-29 15:08:23,895 INFO    MainThread:282624 [backend.py:ensure_launched():217] starting backend process...
+2022-04-29 15:08:23,901 INFO    MainThread:282624 [backend.py:ensure_launched():222] started backend process with pid: 283263
+2022-04-29 15:08:23,904 INFO    MainThread:282624 [wandb_init.py:init():533] backend started and connected
+2022-04-29 15:08:23,908 INFO    MainThread:282624 [wandb_init.py:init():597] updated telemetry
+2022-04-29 15:08:24,007 INFO    MainThread:282624 [wandb_init.py:init():628] communicating run to backend with 30 second timeout
+2022-04-29 15:08:26,014 INFO    MainThread:282624 [wandb_run.py:_on_init():1923] communicating current version
+2022-04-29 15:08:26,105 INFO    MainThread:282624 [wandb_run.py:_on_init():1927] got version response 
+2022-04-29 15:08:26,105 INFO    MainThread:282624 [wandb_init.py:init():659] starting run threads in backend
+2022-04-29 15:08:26,470 INFO    MainThread:282624 [wandb_run.py:_console_start():1897] atexit reg
+2022-04-29 15:08:26,473 INFO    MainThread:282624 [wandb_run.py:_redirect():1770] redirect: SettingsConsole.REDIRECT
+2022-04-29 15:08:26,473 INFO    MainThread:282624 [wandb_run.py:_redirect():1775] Redirecting console.
+2022-04-29 15:08:26,474 INFO    MainThread:282624 [wandb_run.py:_redirect():1831] Redirects installed.
+2022-04-29 15:08:26,474 INFO    MainThread:282624 [wandb_init.py:init():684] run started, returning control to user process
+2022-04-29 15:08:26,491 INFO    MainThread:282624 [wandb_run.py:_config_callback():1131] config_cb None None {'data_dict': {'train': '/home/jcambier/blackjack-card-counter/cards/train/images', 'val': '/home/jcambier/blackjack-card-counter/cards/valid/images', 'nc': 52, 'names': ['10c', '10d', '10h', '10s', '2c', '2d', '2h', '2s', '3c', '3d', '3h', '3s', '4c', '4d', '4h', '4s', '5c', '5d', '5h', '5s', '6c', '6d', '6h', '6s', '7c', '7d', '7h', '7s', '8c', '8d', '8h', '8s', '9c', '9d', '9h', '9s', 'Ac', 'Ad', 'Ah', 'As', 'Jc', 'Jd', 'Jh', 'Js', 'Kc', 'Kd', 'Kh', 'Ks', 'Qc', 'Qd', 'Qh', 'Qs']}}
+2022-04-29 15:09:36,544 INFO    MainThread:282624 [wandb_run.py:_atexit_cleanup():1866] got exitcode: 1
+2022-04-29 15:09:36,546 INFO    MainThread:282624 [wandb_run.py:_restore():1838] restore
+2022-04-29 15:09:38,850 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1027
+  total_bytes: 1027
+}
+
+2022-04-29 15:09:39,023 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1027
+  total_bytes: 1027
+}
+
+2022-04-29 15:09:39,228 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 1027
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:39,329 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 1027
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:39,430 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 12591
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:39,531 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 12591
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:39,632 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 12591
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:39,735 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 12591
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:39,837 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 12591
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:40,074 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 12591
+  total_bytes: 12591
+}
+
+2022-04-29 15:09:40,342 INFO    MainThread:282624 [wandb_run.py:_on_finish():1995] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 12591
+  total_bytes: 12591
+}
+local_info {
+}
+
+2022-04-29 15:09:41,447 INFO    MainThread:282624 [wandb_run.py:_footer_history_summary_info():3102] rendering history
+2022-04-29 15:09:41,447 INFO    MainThread:282624 [wandb_run.py:_footer_history_summary_info():3134] rendering summary
+2022-04-29 15:09:41,455 INFO    MainThread:282624 [wandb_run.py:_footer_sync_info():3057] logging synced files
