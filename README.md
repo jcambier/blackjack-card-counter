@@ -1,3 +1,1 @@
-How to run:
-
-python3 detect.py --source 0 --weights best_weights.pt
+To run, simply run the main.py file and follow the instructions in the console window.
