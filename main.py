@@ -34,9 +34,6 @@ def main():
                         play = get_best_play(cards_detected)
                         print("Based off of the cards present, you should %s\n" % play)
                     last_cards = cards_detected
-                else:
-                    print("No cards detected, please try again.\n")
-                    break
 
 if __name__ == "__main__":
     main()
