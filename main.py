@@ -1,6 +1,6 @@
 import sys
 from subprocess import Popen, PIPE, STDOUT
-import pyfiglet
+#import pyfiglet
 
 detecting = False
 detect = ""
@@ -47,6 +47,22 @@ def count_cards():
         "K": count[11],
         "A": count[12]
     }
+
+    running_count = 0
+    for i in range(13):
+        if 0 <= i <= 4:
+            running_count += 4 - count[i]
+        elif 8 <= i <= 12:
+            running_count -= 4 - count[i]
+    
+    
+    if running_count <= 0:
+        decision = "so you should bet low"
+    else: 
+        decision = "so you should bet high" 
+    
+
+    print("the count is", running_count, decision)
     print(numbers_remaining)
     return sum(count), numbers_remaining
 
@@ -58,8 +74,16 @@ def get_best_play(cards_detected):
 def process_cards(cards_detected):
     cards = cards_detected.split(", ")
     for card in cards:
+        print("card:", card)
         number = card[2]
+        print("number:", number)
         suit = card[3]
+        print("suit:", suit)
+
+        if number == "1":
+            number = "10"
+            suit = card[4]
+        
         cur_deck.get(str(number)).update({str(suit): 0})
 
 def detect_cards():
@@ -74,7 +98,7 @@ def detect_cards():
                 break
 
 def main():
-    pyfiglet.print_figlet("Blackjack Card Counter")
+    #pyfiglet.print_figlet("Blackjack Card Counter")
     print("Starting YOLO v5 detector via webcam (source 0)...")
     detect_cards()
     while True:
