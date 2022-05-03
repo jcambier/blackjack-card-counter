@@ -20,7 +20,7 @@ full_deck = {
     "A": {"c": 1, "d": 1, "h": 1, "s": 1}
 }
 
-def get_best_play(count):
+def get_best_bet(count):
     running_count = 0
     for i in range(13):
         if 0 <= i <= 4:
@@ -59,7 +59,7 @@ def count_cards():
         "K": count[11],
         "A": count[12]
     }
-    get_best_play(count)
+    get_best_bet(count)
     print("remainingcards:", numbers_remaining, "\n")
 
 def process_cards(cards_detected):
