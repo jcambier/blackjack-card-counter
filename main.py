@@ -1,6 +1,5 @@
 import sys
 from subprocess import Popen, PIPE, STDOUT
-#import pyfiglet
 
 detecting = False
 detect = ""
@@ -72,11 +71,9 @@ def process_cards(cards_detected):
             suit = card[4]
         full_deck.get(str(number)).update({str(suit): 0})
 
-def detect_cards():
-    weights = "best_weights.pt"
-    conf_treshold = 0.5
+def detect_cards(weights, conf_threshold):
     global detect
-    detect = Popen([sys.executable, '-u', "detect.py", "--source", "0", "--weights", weights, "--conf-thres", str(conf_treshold), "--nosave"], stdout=PIPE, stderr=STDOUT)
+    detect = Popen([sys.executable, '-u', "detect.py", "--source", "0", "--weights", weights, "--conf-thres", str(conf_threshold), "--nosave"], stdout=PIPE, stderr=STDOUT)
     for line in iter(detect.stdout.readline, b''):
             line = line.decode()
             if line[0] == "0":
@@ -84,9 +81,11 @@ def detect_cards():
                 break
 
 def main():
-    #pyfiglet.print_figlet("Blackjack Card Counter")
+    print("Blackjack Card Counter")
     print("Starting YOLO v5 detector via webcam (source 0)...")
-    detect_cards()
+    weights = "best_weights.pt"
+    conf_threshold = 0.5
+    detect_cards(weights, conf_threshold)
     while True:
         for line in iter(detect.stdout.readline, b''):
             line = line.decode()
