@@ -42,7 +42,6 @@ def count_cards():
             cnt = suits.get(suit)
             if cnt == 0:
                 count[i] -= 1
-    print("There are %s cards left" % sum(count))
     numbers_remaining = {
         "2": count[0],
         "3": count[1],
@@ -58,8 +57,8 @@ def count_cards():
         "K": count[11],
         "A": count[12]
     }
+    print("There are %s cards left" % sum(count), numbers_remaining)
     get_best_bet(count)
-    print("remainingcards:", numbers_remaining, "\n")
 
 def process_cards(cards_detected):
     cards = cards_detected.split(", ")
@@ -77,14 +76,14 @@ def detect_cards(weights, conf_threshold):
     for line in iter(detect.stdout.readline, b''):
             line = line.decode()
             if line[0] == "0":
-                print("YOLO v5 detector started successfully!\n")
+                print("YOLO v5 detector started successfully!")
                 break
 
 def main():
     print("Blackjack Card Counter")
     print("Starting YOLO v5 detector via webcam (source 0)...")
     weights = "best_weights.pt"
-    conf_threshold = 0.5
+    conf_threshold = 0.8
     detect_cards(weights, conf_threshold)
     while True:
         for line in iter(detect.stdout.readline, b''):
@@ -93,7 +92,7 @@ def main():
                 cards_detected = line[line.find("640 ")+len("640 "):line.rfind(" Done.")]
                 if cards_detected:
                     cards_detected = cards_detected[:-1]
-                    print("Detected cards: " + cards_detected)
+                    print("\nDetected cards: " + cards_detected)
                     process_cards(cards_detected)
                     count_cards()
 
