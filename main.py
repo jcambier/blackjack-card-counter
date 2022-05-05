@@ -231,7 +231,10 @@ if __name__ == "__main__":
                 cards_detected = line[line.find("640 ")+len("640 "):line.rfind(" Done.")]
                 if cards_detected:
                     cards_detected = cards_detected[:-1]
-                    sys.stdout.write("\033[F"*8)
-                    print("\n\n\n\n\nDetected cards: " + cards_detected)
+                    if mode_basic:
+                        sys.stdout.write("\033[F"*8)
+                        print("\n\n\n\n\nDetected cards: " + cards_detected)
+                    else:
+                        print("\nDetected cards: " + cards_detected)
                     process_cards(cards_detected)
                     count_cards()
