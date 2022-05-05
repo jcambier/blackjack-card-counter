@@ -116,7 +116,7 @@ def update_starting_hand(number):
     # start_time is only 0 when the round hasn't started yet
     if start_time != 0:
         time_passed = time.time() - start_time
-        print("Time left in round:", int(20 - time_passed))
+        print("Time left in round:", max(0, int(20 - time_passed)))
         #Only when the 20 seconds pass does a new round start a new hand is given
         if time_passed > 20:
             start_time = 0
