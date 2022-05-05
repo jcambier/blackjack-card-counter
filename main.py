@@ -218,8 +218,11 @@ if __name__ == "__main__":
         mode_basic = False
     if float(sys.argv[2]) > 0.0 and float(sys.argv[2]) < 100.0:
         confidence = float(sys.argv[2])
+    if int(sys.argv[3]) >= 0 and float(sys.argv[3]) <= 10:
+        false_positive_filter = float(sys.argv[3])
     assert mode_basic is not None
     assert confidence
+    assert false_positive_filter
     print("Blackjack Card Counter")
     print("Starting YOLO v5 detector via webcam (source 0)...")
     weights = "best_weights.pt"
@@ -231,11 +234,18 @@ if __name__ == "__main__":
             if line[0] == "0":
                 cards_detected = line[line.find("640 ")+len("640 "):line.rfind(" Done.")]
                 if cards_detected:
+                    # this is how we handle false positives,
+                    # we have a dictionary where the detected
+                    # cards are the key, and the value is the count
                     cur = count_card_detected.get(cards_detected)
                     if cur == None:
                         cur = 0
+                    # we update the count based on if the card(s) are
+                    # detected
                     count_card_detected.update({cards_detected: int(cur) + 1})
-                    if count_card_detected.get(cards_detected) > 5:
+                    # we only process the cards if they have more than
+                    # 5 hits in the count dictionary
+                    if count_card_detected.get(cards_detected) > false_positive_filter:
                         cards_detected = cards_detected[:-1]
                         if mode_basic:
                             sys.stdout.write("\033[F"*8)
