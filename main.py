@@ -1,5 +1,7 @@
+from re import A
 import sys
 from subprocess import Popen, PIPE, STDOUT
+import time
 
 detecting = False
 detect = ""
@@ -19,7 +21,47 @@ full_deck = {
     "A": {"c": 1, "d": 1, "h": 1, "s": 1}
 }
 
+player_and_dealer_hand = []
+
+round_num = 0
+
+start_time = 0
+
+basic_strategy_hard_chart = [["H","H","H","H","H","H","H","H","H","H"],
+                             ["H","D","D","D","D","H","H","H","H","H"],
+                             ["D","D","D","D","D","D","D","D","H","H"],
+                             ["D","D","D","D","D","D","D","D","D","D"],
+                             ["H","H","S","S","S","H","H","H","H","H"],
+                             ["S","S","S","S","S","H","H","H","H","H"],
+                             ["S","S","S","S","S","H","H","H","H","H"],
+                             ["S","S","S","S","S","H","H","H","H","H"],
+                             ["S","S","S","S","S","H","H","H","H","H"],                        
+                             ["S","S","S","S","S","S","S","S","S","S"]]
+
+basic_strategy_soft_chart = [["H","H","H","D","D","H","H","H","H","H"],
+                            ["H","H","H","D","D","H","H","H","H","H"],         
+                            ["H","H","D","D","D","H","H","H","H","H"],
+                            ["H","H","D","D","D","H","H","H","H","H"],               
+                            ["H","D","D","D","D","H","H","H","H","H"],             
+                            ["Ds","Ds","Ds","Ds","Ds","S","S","H","H","H"],
+                            ["S","S","S","S","Ds","S","S","S","S","S"],
+                            ["S","S","S","S","S","S","S","S","S","S"]]
+
+basic_strategy_split_chart = [["YN","YN","Y","Y","Y","Y","N","N","N","N"],
+                              ["YN","YN","Y","Y","Y","Y","N","N","N","N"],
+                              ["N","N","N","YN","YN","N","N","N","N","N"],
+                              ["N","N","N","N","N","N","N","N","N","N"],
+                              ["YN","Y","Y","Y","Y","N","N","N","N","N"],
+                              ["Y","Y","Y","Y","Y","Y","N","N","N","N"],
+                              ["Y","Y","Y","Y","Y","Y","Y","Y","Y","Y"],
+                              ["Y","Y","Y","Y","Y","N","Y","Y","N","N"],
+                              ["N","N","N","N","N","N","N","N","N","N"],
+                              ["Y","Y","Y","Y","Y","Y","Y","Y","Y","Y"]]
+
 def get_best_bet(count):
+    '''
+    Input 
+    '''
     running_count = 0
     for i in range(13):
         if 0 <= i <= 4:
@@ -60,6 +102,87 @@ def count_cards():
     print("There are %s cards left" % sum(count), numbers_remaining)
     get_best_bet(count)
 
+def recomended_move(rec_move):
+    if rec_move == "H":
+        move = "Hit"
+    
+    elif rec_move == "S":
+        move = "Stand"
+    
+    elif rec_move == "D":
+        move = "Double if allowed, otherwise Hit"
+    
+    elif rec_move == "Ds":
+        move = "Double if allowed, otherwise Stand"
+
+    elif rec_move == "Y":
+        move = "Split"
+
+    elif rec_move == "N":
+        move = "Hit instead of splitting"
+
+    elif rec_move == "YN":
+        move = "Split only if Double after spliting is allowed, otherwise Hit"
+
+    elif rec_move == "B":
+        move = "Blackjack! YOU WIN!!!"
+    
+    print("Recomended Move:", move)
+
+def basic_strategy(player_and_dealer_hand):
+
+    player_hand = sum(player_and_dealer_hand[0:2])
+    if 5 <= player_hand <= 7:
+        rec_move = "H"
+
+    elif 18 <= player_hand <= 20:
+        rec_move = "S"
+
+    elif player_hand == 21:
+        rec_move = "B"
+
+    elif player_and_dealer_hand[0] == player_and_dealer_hand[1]:
+        rec_move = basic_strategy_split_chart[player_and_dealer_hand[0] - 2][player_and_dealer_hand[2] - 2]
+
+    elif player_and_dealer_hand[0] == 11 or player_and_dealer_hand[1] == 11:
+        if player_and_dealer_hand[0] == 11:
+            not_ace_card = player_and_dealer_hand[1]
+        else:
+            not_ace_card = player_and_dealer_hand[0]
+        rec_move = basic_strategy_soft_chart[not_ace_card - 2][player_and_dealer_hand[2] - 2]
+    else:
+        rec_move = basic_strategy_hard_chart[player_hand - 8][player_and_dealer_hand[2] - 2]
+
+    recomended_move(rec_move)
+
+def get_player_and_dealer_hands(number):
+    global start_time
+    global player_and_dealer_hand
+    global round_num
+
+    if start_time != 0:
+        time_passed = time.time() - start_time
+        print("Time passed:", time_passed)
+        if time_passed > 20:
+            start_time = 0
+            player_and_dealer_hand = []
+    
+    if len(player_and_dealer_hand) < 3:
+        if number == "J" or number == "Q" or number == "K":
+            number = "10"
+        elif number == "A":
+            number = "11"
+
+        player_and_dealer_hand.append(int(number))
+
+        if len(player_and_dealer_hand) == 3:
+            round_num += 1
+            print("Round:", round_num)
+            basic_strategy(player_and_dealer_hand)
+            start_time = time.time()
+    
+    print("The list", player_and_dealer_hand)
+    
 def process_cards(cards_detected):
     cards = cards_detected.split(", ")
     for card in cards:
@@ -68,7 +191,11 @@ def process_cards(cards_detected):
         if number == "1":
             number = "10"
             suit = card[4]
+        if full_deck.get(number).get(suit) == 1: #This makes sure it adds the card only once even if it is detected again
+            get_player_and_dealer_hands(number)
         full_deck.get(str(number)).update({str(suit): 0})
+        
+        
 
 def detect_cards(weights, conf_threshold):
     global detect
@@ -95,6 +222,9 @@ def main():
                     print("\nDetected cards: " + cards_detected)
                     process_cards(cards_detected)
                     count_cards()
+                    
+
 
 if __name__ == "__main__":
     main()
+
