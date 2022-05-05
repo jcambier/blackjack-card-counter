@@ -55,7 +55,10 @@ basic_strategy_splitchart = [["YN","YN","Y","Y","Y","Y","N","N","N","N"],
 
 def recomended_move(rec_move):
     '''
-    Recommended Blackjack move
+    Recommends what move to do by translating the inputed acronym into a word or sentence
+    Example:
+    Input: "H:
+    Output: "Recomended Move: Hit"
     '''
     if rec_move == "H":
         move = "Hit"
@@ -78,6 +81,8 @@ def recomended_move(rec_move):
 def basic_strategy(player_and_dealer_hand):
     '''
     Basic Blackjack strategy
+    Looking at the inputed list that represents the starting hand, that has the first 2 numbers as the player's hand and the last number 
+    is the dealer's hand, it recommends the move by looking at the strategy chart. 
     '''
     player_hand = sum(player_and_dealer_hand[0:2])
     if 5 <= player_hand <= 7:
@@ -98,31 +103,38 @@ def basic_strategy(player_and_dealer_hand):
         rec_move = basic_strategy_hard_chart[player_hand - 8][player_and_dealer_hand[2] - 2]
     recomended_move(rec_move)
 
-def get_player_and_dealer_hands(number):
+def update_starting_hand(number):
     ''''
-    Get player and dealer hands
+    Get player and dealer starting hands by looking at the first 3 cards detected. Those 3 cards are the first 3 cards that the player can view
+    in the beginning of the round. After 3 cards are detected, the round begins, a move is recommended, and the round last for 20 seconds. 
+    During those 20 seconds, the counting algorithm still runs, however additional cards will not be recorded in list as they are not the 
+    starting hand. After 20 seconds, the code will wait for 3 more cards to start the next round. 
     '''
     global start_time
     global player_and_dealer_hand
     global round_num
+    # start_time is only 0 when the round hasn't started yet
     if start_time != 0:
         time_passed = time.time() - start_time
-        print("Time passed:", time_passed)
+        print("Time left in round:", int(20 - time_passed))
+        #Only when the 20 seconds pass does a new round start a new hand is given
         if time_passed > 20:
             start_time = 0
             player_and_dealer_hand = []
+    #This is adding the first 3 cards detected to a list
     if len(player_and_dealer_hand) < 3:
         if number == "J" or number == "Q" or number == "K":
             number = "10"
         elif number == "A":
             number = "11"
         player_and_dealer_hand.append(int(number))
+        #Once all cards are given, the round starts and a move is recommended based on basic strategy chart
         if len(player_and_dealer_hand) == 3:
             round_num += 1
             print("Round:", round_num)
             basic_strategy(player_and_dealer_hand)
             start_time = time.time()
-    print("The list", player_and_dealer_hand)
+    print("Player and Dealer's Starting Hand", player_and_dealer_hand)
 
 def get_best_bet(count):
     '''
@@ -193,7 +205,7 @@ def process_cards(cards_detected):
             suit = card[4]
         # this makes sure it adds the card only once even if it is detected again
         if full_deck.get(number).get(suit) == 1 and not mode_basic:
-            get_player_and_dealer_hands(number)
+            update_starting_hand(number)
         # update the deck that we have seen/counted the card
         full_deck.get(str(number)).update({str(suit): 0})
         
