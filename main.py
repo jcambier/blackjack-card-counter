@@ -3,9 +3,7 @@ from subprocess import Popen, PIPE, STDOUT
 import time
 
 mode_basic = None
-
-detecting = False
-detect = ""
+detect = None
 full_deck = {
     "2": {"c": 1, "d": 1, "h": 1, "s": 1},
     "3": {"c": 1, "d": 1, "h": 1, "s": 1},
@@ -21,12 +19,11 @@ full_deck = {
     "K": {"c": 1, "d": 1, "h": 1, "s": 1},
     "A": {"c": 1, "d": 1, "h": 1, "s": 1}
 }
-count_card_detected = {}
+num_cards_detected = {}
 
 player_and_dealer_hand = []
 round_num = 0
 start_time = 0
-
 basic_strategy_hard_chart = [["H","H","H","H","H","H","H","H","H","H"],
                              ["H","D","D","D","D","H","H","H","H","H"],
                              ["D","D","D","D","D","D","D","D","H","H"],
@@ -37,7 +34,6 @@ basic_strategy_hard_chart = [["H","H","H","H","H","H","H","H","H","H"],
                              ["S","S","S","S","S","H","H","H","H","H"],
                              ["S","S","S","S","S","H","H","H","H","H"],                        
                              ["S","S","S","S","S","S","S","S","S","S"]]
-
 basic_strategy_soft_chart = [["H","H","H","D","D","H","H","H","H","H"],
                             ["H","H","H","D","D","H","H","H","H","H"],         
                             ["H","H","D","D","D","H","H","H","H","H"],
@@ -46,7 +42,6 @@ basic_strategy_soft_chart = [["H","H","H","D","D","H","H","H","H","H"],
                             ["Ds","Ds","Ds","Ds","Ds","S","S","H","H","H"],
                             ["S","S","S","S","Ds","S","S","S","S","S"],
                             ["S","S","S","S","S","S","S","S","S","S"]]
-
 basic_strategy_split_chart = [["YN","YN","Y","Y","Y","Y","N","N","N","N"],
                               ["YN","YN","Y","Y","Y","Y","N","N","N","N"],
                               ["N","N","N","YN","YN","N","N","N","N","N"],
@@ -250,15 +245,15 @@ if __name__ == "__main__":
                     # we have a dictionary where the detected
                     # cards are the key, and the value is the count
                     # (number of times they have been detected)
-                    cur = count_card_detected.get(cards_detected)
+                    cur = num_cards_detected.get(cards_detected)
                     if cur == None:
                         cur = 0
                     # we update the count based on if the card(s) are
                     # detected
-                    count_card_detected.update({cards_detected: int(cur) + 1})
+                    num_cards_detected.update({cards_detected: int(cur) + 1})
                     # we only process the cards if they have a count greater 
                     # than the configured false positive filter
-                    if count_card_detected.get(cards_detected) > false_positive_filter:
+                    if num_cards_detected.get(cards_detected) > false_positive_filter:
                         cards_detected = cards_detected[:-1]
                         if mode_basic:
                             # couldn't fix printing for advanced version
