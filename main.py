@@ -25,15 +25,15 @@ player_and_dealer_hand = []
 round_num = 0
 start_time = 0
 basic_strategy_hard_chart = [["H","H","H","H","H","H","H","H","H","H"],
-                             ["H","D","D","D","D","H","H","H","H","H"],
-                             ["D","D","D","D","D","D","D","D","H","H"],
-                             ["D","D","D","D","D","D","D","D","D","D"],
-                             ["H","H","S","S","S","H","H","H","H","H"],
-                             ["S","S","S","S","S","H","H","H","H","H"],
-                             ["S","S","S","S","S","H","H","H","H","H"],
-                             ["S","S","S","S","S","H","H","H","H","H"],
-                             ["S","S","S","S","S","H","H","H","H","H"],                        
-                             ["S","S","S","S","S","S","S","S","S","S"]]
+                            ["H","D","D","D","D","H","H","H","H","H"],
+                            ["D","D","D","D","D","D","D","D","H","H"],
+                            ["D","D","D","D","D","D","D","D","D","D"],
+                            ["H","H","S","S","S","H","H","H","H","H"],
+                            ["S","S","S","S","S","H","H","H","H","H"],
+                            ["S","S","S","S","S","H","H","H","H","H"],
+                            ["S","S","S","S","S","H","H","H","H","H"],
+                            ["S","S","S","S","S","H","H","H","H","H"],                        
+                            ["S","S","S","S","S","S","S","S","S","S"]]
 basic_strategy_soft_chart = [["H","H","H","D","D","H","H","H","H","H"],
                             ["H","H","H","D","D","H","H","H","H","H"],         
                             ["H","H","D","D","D","H","H","H","H","H"],
@@ -42,16 +42,16 @@ basic_strategy_soft_chart = [["H","H","H","D","D","H","H","H","H","H"],
                             ["Ds","Ds","Ds","Ds","Ds","S","S","H","H","H"],
                             ["S","S","S","S","Ds","S","S","S","S","S"],
                             ["S","S","S","S","S","S","S","S","S","S"]]
-basic_strategy_split_chart = [["YN","YN","Y","Y","Y","Y","N","N","N","N"],
-                              ["YN","YN","Y","Y","Y","Y","N","N","N","N"],
-                              ["N","N","N","YN","YN","N","N","N","N","N"],
-                              ["N","N","N","N","N","N","N","N","N","N"],
-                              ["YN","Y","Y","Y","Y","N","N","N","N","N"],
-                              ["Y","Y","Y","Y","Y","Y","N","N","N","N"],
-                              ["Y","Y","Y","Y","Y","Y","Y","Y","Y","Y"],
-                              ["Y","Y","Y","Y","Y","N","Y","Y","N","N"],
-                              ["N","N","N","N","N","N","N","N","N","N"],
-                              ["Y","Y","Y","Y","Y","Y","Y","Y","Y","Y"]]
+basic_strategy_splitchart = [["YN","YN","Y","Y","Y","Y","N","N","N","N"],
+                            ["YN","YN","Y","Y","Y","Y","N","N","N","N"],
+                            ["N","N","N","YN","YN","N","N","N","N","N"],
+                            ["N","N","N","N","N","N","N","N","N","N"],
+                            ["YN","Y","Y","Y","Y","N","N","N","N","N"],
+                            ["Y","Y","Y","Y","Y","Y","N","N","N","N"],
+                            ["Y","Y","Y","Y","Y","Y","Y","Y","Y","Y"],
+                            ["Y","Y","Y","Y","Y","N","Y","Y","N","N"],
+                            ["N","N","N","N","N","N","N","N","N","N"],
+                            ["Y","Y","Y","Y","Y","Y","Y","Y","Y","Y"]]
 
 def recomended_move(rec_move):
     '''
@@ -87,7 +87,7 @@ def basic_strategy(player_and_dealer_hand):
     elif player_hand == 21:
         rec_move = "B"
     elif player_and_dealer_hand[0] == player_and_dealer_hand[1]:
-        rec_move = basic_strategy_split_chart[player_and_dealer_hand[0] - 2][player_and_dealer_hand[2] - 2]
+        rec_move = basic_strategy_splitchart[player_and_dealer_hand[0] - 2][player_and_dealer_hand[2] - 2]
     elif player_and_dealer_hand[0] == 11 or player_and_dealer_hand[1] == 11:
         if player_and_dealer_hand[0] == 11:
             not_ace_card = player_and_dealer_hand[1]
