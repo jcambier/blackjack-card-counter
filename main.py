@@ -21,6 +21,7 @@ full_deck = {
     "K": {"c": 1, "d": 1, "h": 1, "s": 1},
     "A": {"c": 1, "d": 1, "h": 1, "s": 1}
 }
+count_card_detected = {}
 
 player_and_dealer_hand = []
 round_num = 0
@@ -230,11 +231,16 @@ if __name__ == "__main__":
             if line[0] == "0":
                 cards_detected = line[line.find("640 ")+len("640 "):line.rfind(" Done.")]
                 if cards_detected:
-                    cards_detected = cards_detected[:-1]
-                    if mode_basic:
-                        sys.stdout.write("\033[F"*8)
-                        print("\n\n\n\n\nDetected cards: " + cards_detected)
-                    else:
-                        print("\nDetected cards: " + cards_detected)
-                    process_cards(cards_detected)
-                    count_cards()
+                    cur = count_card_detected.get(cards_detected)
+                    if cur == None:
+                        cur = 0
+                    count_card_detected.update({cards_detected: int(cur) + 1})
+                    if count_card_detected.get(cards_detected) > 5:
+                        cards_detected = cards_detected[:-1]
+                        if mode_basic:
+                            sys.stdout.write("\033[F"*8)
+                            print("\n\n\n\n\nDetected cards: " + cards_detected)
+                        else:
+                            print("\nDetected cards: " + cards_detected)
+                        process_cards(cards_detected)
+                        count_cards()
