@@ -129,7 +129,6 @@ def get_player_and_dealer_hands(number):
             start_time = time.time()
     print("The list", player_and_dealer_hand)
 
-
 def get_best_bet(count):
     '''
     Gets the running count of cards based on how 
