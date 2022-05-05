@@ -136,6 +136,7 @@ def get_best_bet(count):
     if it is more favorable to bet low or high
     '''
     running_count = 0
+    # card counting strategy, keeps a running count of cards based on value and quantity
     for i in range(13):
         if 0 <= i <= 4:
             running_count += 4 - count[i]
@@ -155,12 +156,16 @@ def count_cards():
     cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
     count = [ 4,   4,   4,   4,   4,   4,   4,   4,    4,   4,   4,   4,   4 ]
     suits = ["c", "d", "h", "s"]
+    # loop through the dictionary, if there are any cards
+    # marked as 0 they have been seen so we remove 1 from
+    # the count
     for i, card in enumerate(cards):
         suits = full_deck.get(card)
         for suit in suits:
             cnt = suits.get(suit)
             if cnt == 0:
                 count[i] -= 1
+    # remaining cards as a dictionary
     numbers_remaining = {
         "2": count[0],
         "3": count[1],
@@ -184,14 +189,17 @@ def process_cards(cards_detected):
     Process detected cards and mark them in dictionary
     '''
     cards = cards_detected.split(", ")
+    # split the cards given to identify each number/suit
     for card in cards:
         number = card[2]
         suit = card[3]
         if number == "1":
             number = "10"
             suit = card[4]
-        if full_deck.get(number).get(suit) == 1 and not mode_basic: # This makes sure it adds the card only once even if it is detected again
+        # this makes sure it adds the card only once even if it is detected again
+        if full_deck.get(number).get(suit) == 1 and not mode_basic:
             get_player_and_dealer_hands(number)
+        # update the deck that we have seen/counted the card
         full_deck.get(str(number)).update({str(suit): 0})
         
 def detect_cards(weights, conf_threshold):
@@ -200,9 +208,11 @@ def detect_cards(weights, conf_threshold):
     variable to read stdout from (for detections)
     '''
     global detect
+    # run YOLOv5 detect in the background, with a global variable to read stdout buffer
     detect = Popen([sys.executable, '-u', "detect.py", "--source", "0", "--weights", weights, "--conf-thres", str(conf_threshold), "--nosave"], stdout=PIPE, stderr=STDOUT)
     for line in iter(detect.stdout.readline, b''):
             line = line.decode()
+            # once YOLOv5 detect starts, it outputs lines starting with 0 (the webcam source)
             if line[0] == "0":
                 print("YOLO v5 detector started successfully!")
                 break
@@ -219,6 +229,7 @@ if __name__ == "__main__":
         confidence = float(sys.argv[2])
     if int(sys.argv[3]) >= 0 and float(sys.argv[3]) <= 10:
         false_positive_filter = float(sys.argv[3])
+    # configure mode, confidence, and false positive filtering
     assert mode_basic is not None
     assert confidence
     assert false_positive_filter
@@ -226,30 +237,35 @@ if __name__ == "__main__":
     print("Starting YOLO v5 detector via webcam (source 0)...")
     weights = "best_weights.pt"
     conf_threshold = confidence
+    # use our weights trained on a large dataset of playing cards
     detect_cards(weights, conf_threshold)
     while True:
         for line in iter(detect.stdout.readline, b''):
             line = line.decode()
             if line[0] == "0":
+                # now we check for a new line that has objects printed out (meaning cards were detected)
                 cards_detected = line[line.find("640 ")+len("640 "):line.rfind(" Done.")]
                 if cards_detected:
                     # this is how we handle false positives,
                     # we have a dictionary where the detected
                     # cards are the key, and the value is the count
+                    # (number of times they have been detected)
                     cur = count_card_detected.get(cards_detected)
                     if cur == None:
                         cur = 0
                     # we update the count based on if the card(s) are
                     # detected
                     count_card_detected.update({cards_detected: int(cur) + 1})
-                    # we only process the cards if they have more than
-                    # 5 hits in the count dictionary
+                    # we only process the cards if they have a count greater 
+                    # than the configured false positive filter
                     if count_card_detected.get(cards_detected) > false_positive_filter:
                         cards_detected = cards_detected[:-1]
                         if mode_basic:
+                            # couldn't fix printing for advanced version
                             sys.stdout.write("\033[F"*8)
                             print("\n\n\n\n\nDetected cards: " + cards_detected)
                         else:
                             print("\nDetected cards: " + cards_detected)
+                        # process and count cards (update dictionary, count numbers, and if advanced mode is set, strategy is incorporated as well)
                         process_cards(cards_detected)
                         count_cards()
