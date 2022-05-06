@@ -1,5 +1,6 @@
 import sys
 from subprocess import Popen, PIPE, STDOUT
+from subprocess import check_output
 
 detecting = False
 detect = ""
@@ -72,7 +73,9 @@ def process_cards(cards_detected):
 
 def detect_cards(weights, conf_threshold):
     global detect
-    detect = Popen([sys.executable, '-u', "detect.py", "--source", "0", "--weights", weights, "--conf-thres", str(conf_threshold), "--nosave"], stdout=PIPE, stderr=STDOUT)
+    #detect = Popen([sys.executable, '-u', "detect.py", "--source", "0", "--weights", weights, "--conf-thres", str(conf_threshold), "--nosave"], stdout=PIPE, stderr=STDOUT)
+    out = check_output([sys.executable, '-u', "detect.py", "--source", "0", "--weights", weights, "--conf-thres", str(conf_threshold), "--nosave"])
+    print(out)
     for line in iter(detect.stdout.readline, b''):
             line = line.decode()
             if line[0] == "0":

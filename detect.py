@@ -28,6 +28,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from cv2 import VideoCapture
 
 import torch
 import torch.backends.cudnn as cudnn
@@ -75,6 +76,15 @@ def run(
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
 ):
+    # MY CODE
+    LOGGER.info('Testing')
+    vc = cv2.VideoCapture(0)
+    if vc.isOpened():
+        rval, fr = vc.read()
+    else:
+        rval = False
+    # MY CODE
+
     source = str(source)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
@@ -172,8 +182,19 @@ def run(
 
             # Stream results
             im0 = annotator.result()
+
+            # MY CODE
             if view_img:
-                cv2.imshow(str(p), im0)
+                if (rval):
+                    cv2.imshow(str(p), im0)
+                    #cv2.imshow(str(p), fr)
+
+                LOGGER.info('Test')
+                rval, fr = vid_cap.read()
+                cv2.waitKey(20)
+                cv2.line(img=fr, pt1=(10, 10), pt2=(100, 10), color=(255, 0, 0), thickness=5, lineType=8, shift=0)
+            # MY CODE
+
                 cv2.waitKey(1)  # 1 millisecond
 
             # Save results (image with detections)
