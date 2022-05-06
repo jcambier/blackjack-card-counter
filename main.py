@@ -2,6 +2,7 @@ import sys
 from subprocess import Popen, PIPE, STDOUT
 import time
 
+last_print_list = []
 mode_basic = None
 detect = None
 full_deck = {
@@ -268,11 +269,19 @@ if __name__ == "__main__":
                     if num_cards_detected.get(cards_detected) > false_positive_filter:
                         cards_detected = cards_detected[:-1]
                         if mode_basic:
-                            # couldn't fix printing for advanced version
-                            sys.stdout.write("\033[F"*8)
-                            print("\n\n\n\n\nDetected cards: " + cards_detected)
+                            if not cards_detected in last_print_list:
+                                # couldn't fix printing for advanced version
+                                sys.stdout.write("\033[F"*8)
+                                print("\n\n\n\n\nDetected cards: " + cards_detected)
+                                last_print_list.append(cards_detected)
+                                process_cards(cards_detected)
+                                count_cards()
                         else:
-                            print("\nDetected cards: " + cards_detected)
+                            if not cards_detected in last_print_list:
+                                print("\nDetected cards: " + cards_detected)
+                                last_print_list.append(cards_detected)
+                                process_cards(cards_detected)
+                                count_cards()
                         # process and count cards (update dictionary, count numbers, and if advanced mode is set, strategy is incorporated as well)
-                        process_cards(cards_detected)
-                        count_cards()
+                        #process_cards(cards_detected)
+                        #count_cards()
