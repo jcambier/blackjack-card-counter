@@ -24,6 +24,7 @@ num_cards_detected = {}
 player_and_dealer_hand = []
 round_num = 0
 start_time = 0
+move = "N/A"
 basic_strategy_hard_chart = [["H","H","H","H","H","H","H","H","H","H"],
                             ["H","D","D","D","D","H","H","H","H","H"],
                             ["D","D","D","D","D","D","D","D","H","H"],
@@ -53,6 +54,21 @@ basic_strategy_splitchart = [["YN","YN","Y","Y","Y","Y","N","N","N","N"],
                             ["N","N","N","N","N","N","N","N","N","N"],
                             ["Y","Y","Y","Y","Y","Y","Y","Y","Y","Y"]]
 
+def print_advanced_info():
+    '''
+    Prints out all information pertaining to the advance mode such as the round number, time left in
+    round, the starting hand, and the recommended move
+    '''
+    print("Round:", round_num)
+    time_passed = time.time() - start_time
+    time_left = max(0, int(20 - time_passed))
+    print("Time left in round:", time_left)
+    print("Player and Dealer's Starting Hand", player_and_dealer_hand)
+    if time_left == 0:
+        print("Recomended Move for Round", round_num,":", "N/A")
+    else:
+        print("Recomended Move for Round", round_num,":", move)
+
 def recomended_move(rec_move):
     '''
     Recommends what move to do by translating the inputed acronym into a word or sentence
@@ -60,6 +76,8 @@ def recomended_move(rec_move):
     Input: "H:
     Output: "Recomended Move: Hit"
     '''
+    global move
+
     if rec_move == "H":
         move = "Hit"
     elif rec_move == "S":
@@ -76,7 +94,7 @@ def recomended_move(rec_move):
         move = "Split only if Double after spliting is allowed, otherwise Hit"
     elif rec_move == "B":
         move = "Blackjack! YOU WIN!!!"
-    print("Recomended Move:", move)
+    
 
 def basic_strategy(player_and_dealer_hand):
     '''
@@ -116,7 +134,6 @@ def update_starting_hand(number):
     # start_time is only 0 when the round hasn't started yet
     if start_time != 0:
         time_passed = time.time() - start_time
-        print("Time left in round:", max(0, int(20 - time_passed)))
         #Only when the 20 seconds pass does a new round start a new hand is given
         if time_passed > 20:
             start_time = 0
@@ -131,10 +148,8 @@ def update_starting_hand(number):
         #Once all cards are given, the round starts and a move is recommended based on basic strategy chart
         if len(player_and_dealer_hand) == 3:
             round_num += 1
-            print("Round:", round_num)
             basic_strategy(player_and_dealer_hand)
             start_time = time.time()
-    print("Player and Dealer's Starting Hand", player_and_dealer_hand)
 
 def get_best_bet(count):
     '''
@@ -271,8 +286,13 @@ if __name__ == "__main__":
                             # couldn't fix printing for advanced version
                             sys.stdout.write("\033[F"*8)
                             print("\n\n\n\n\nDetected cards: " + cards_detected)
+                        
                         else:
                             print("\nDetected cards: " + cards_detected)
                         # process and count cards (update dictionary, count numbers, and if advanced mode is set, strategy is incorporated as well)
                         process_cards(cards_detected)
+                        
+                        if mode_basic == False:
+                            print_advanced_info()
+
                         count_cards()
